@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dam2m06uf4", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MP0613_jsp", "root", "");
         } catch (Exception e) {
             throw new ServletException(e);
         }
