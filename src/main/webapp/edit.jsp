@@ -11,7 +11,7 @@
     Connection connection = null;
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dam2m06uf4", "root", "");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MP0613_jsp", "root", "");
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id=?");
         statement.setInt(1, userId);
         ResultSet resultSet = statement.executeQuery();
@@ -102,7 +102,7 @@
     <h1>Edit User</h1>
 
     <% if (user != null) { %>
-    <form action="users?action=edit" method="get">
+    <form action="users?action=edit" method="post">
         <input type="hidden" name="id" value="<%= user.getId() %>">
         <div class="form-group">
             <label for="name" class="form-label">Name:</label>
