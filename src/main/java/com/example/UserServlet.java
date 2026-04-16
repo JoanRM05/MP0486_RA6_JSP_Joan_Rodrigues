@@ -29,9 +29,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        if ("edit".equals(action)) {
-            editUser (request, response);
-        } else if ("delete".equals(action)) {
+        if ("delete".equals(action)) {
             deleteUser (request, response);
         } else {
             listUsers(request, response);
@@ -55,10 +53,15 @@ public class UserServlet extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
             addUser(request, response);
+        } else if ("edit".equals(action)) {
+            editUser(request, response);
+        } else {
+            response.sendRedirect("users");
         }
     }
 
@@ -100,14 +103,16 @@ public class UserServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         String email = request.getParameter("email");
-        try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE users SET name=?, email=? WHERE id=?");
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET name=?, email=? WHERE id=?")) {
             statement.setString(1, name);
             statement.setString(2, email);
             statement.setInt(3, id);
-            statement.executeUpdate();
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new ServletException("No user updated. User ID not found: " + id);
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServletException("Error updating user", e);
         }
         response.sendRedirect("users");
     }
